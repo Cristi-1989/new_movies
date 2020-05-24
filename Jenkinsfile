@@ -2,10 +2,15 @@ pipeline {
     agent any
 
     stages {
-        stage('Lint java code by running gradlew checkstyle') {
+        stage('Lint java code') {
              steps {
                  sh './gradlew checkstyleMain'
              }
+        }
+        stage('BUILD') {
+            steps {
+                sh './gradlew build'
+            }
         }
 
     }
