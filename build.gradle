@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.3.0.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'checkstyle'
 }
 
 group = 'com.devops'
@@ -26,4 +27,17 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+checkstyle {
+	configFile file('config/checkstyle.xml')
+	toolVersion '8.32'
+}
+
+checkstyleMain {
+	source 'src/main/java'
+}
+
+checkstyleTest {
+	source ='src/test/java'
 }

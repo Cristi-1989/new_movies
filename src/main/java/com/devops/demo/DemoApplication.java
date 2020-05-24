@@ -8,14 +8,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@ComponentScan(basePackages={"com.devops.crud"})
-@EnableJpaRepositories(basePackages="com.devops.crud.repositories")
+@ComponentScan(basePackages = {"com.devops.crud"})
+@EnableJpaRepositories(basePackages = "com.devops.crud.repositories")
 @EnableTransactionManagement
-@EntityScan(basePackages="com.devops.crud.entities")
+@EntityScan(basePackages = "com.devops.crud.entities")
 public class DemoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
 
 }
