@@ -26,9 +26,10 @@ pipeline {
                 sh """
                 echo "Cleaning up all images and containers ${IMAGE_TAG}"
                 """
-            }
-            script {
-                dockerImage = docker.build REGISTRY + ":$BUILD_NUMBER"
+
+                script {
+                    dockerImage = docker.build REGISTRY + ":$BUILD_NUMBER"
+                }
             }
         }
         stage('Deploy our image') {
