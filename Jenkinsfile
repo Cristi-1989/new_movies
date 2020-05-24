@@ -4,7 +4,7 @@ pipeline {
     environment {
         APP_NAME = "new_movies"
 //        IMAGE_TAG = "${APPNAME}:${env.BUILD_NUMBER}"
-        REGISTRY = "crististoica/${APPNAME}"
+        REGISTRY = "crististoica/${APP_NAME}"
         DOCKER_CREDS = 'cristi_docker'
         AWS_REGION = 'us-west-2'
         AWS_CREDENTIALS = "cristi_aws"
@@ -24,11 +24,11 @@ pipeline {
         stage('Build image') {
             steps {
                 sh """
-                echo "Building image ${REGISTRY}:${BUILD_NUMBER}"
+                echo "Building image ${REGISTRY}:v${BUILD_NUMBER}"
                 """
 
                 script {
-                    dockerImage = docker.build REGISTRY + ":$BUILD_NUMBER"
+                    dockerImage = docker.build REGISTRY + ":v$BUILD_NUMBER"
                 }
             }
         }
