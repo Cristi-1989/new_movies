@@ -24,7 +24,7 @@ pipeline {
         stage('Build image') {
             steps {
                 sh """
-                echo "Cleaning up all images and containers ${IMAGE_TAG}"
+                echo "Building image ${REGISTRY}:${BUILD_NUMBER}"
                 """
 
                 script {
