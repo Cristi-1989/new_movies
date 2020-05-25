@@ -32,7 +32,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy our image') {
+        stage('Push our image') {
             steps {
                 script {
                     docker.withRegistry('', DOCKER_CREDS) {
@@ -49,40 +49,40 @@ pipeline {
             }
         }
 
-        stage('Get BLUE version') {
-            steps {
-                withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
-                    sh 'export BLUE_VERSION=$(kubectl --kubeconfig ~/kubeconfig get service $APP_NAME-service -o=jsonpath=\'{.spec.selector.version}\')'
-                }
-            }
-        }
-        stage('Deploy Green (current) version') {
-            steps {
-                withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
-                    sh 'kubectl --kubeconfig ~/kubeconfig get deployment $APP_NAME-deployment-$BLUE_VERSION | sed -e "s/$BLUE_VERSION/$VERSION/g" | kubectl --kubeconfig ~/kubeconfig apply -f -'
-                }
-            }
-        }
-        stage('Check rollout status') {
-            steps {
-                withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
-                    sh 'kubectl --kubeconfig ~/kubeconfig rollout status deployment/$APP_NAME-deployment-$VERSION'
-                }
-            }
-        }
-        stage('Deploy new service') {
-            steps {
-                withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
-                    sh 'kubectl --kubeconfig ~/kubeconfig get service ${APP_NAME}-service -o=yaml | sed -e "s/$BLUE_VERSION/$VERSION/g" | kubectl --kubeconfig ~/kubeconfig apply -f -'
-                }
-            }
-        }
-        stage('Delete BLUE version') {
-            steps {
-                withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
-                    sh 'kubectl --kubeconfig ~/kubeconfig delete deployment $APP_NAME-deployment-$BLUE_VERSION'
-                }
-            }
-        }
+        // stage('Get BLUE version') {
+        //     steps {
+        //         withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
+        //             sh 'export BLUE_VERSION=$(kubectl --kubeconfig ~/kubeconfig get service $APP_NAME-service -o=jsonpath=\'{.spec.selector.version}\')'
+        //         }
+        //     }
+        // }
+        // stage('Deploy Green (current) version') {
+        //     steps {
+        //         withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
+        //             sh 'kubectl --kubeconfig ~/kubeconfig get deployment $APP_NAME-deployment-$BLUE_VERSION | sed -e "s/$BLUE_VERSION/$VERSION/g" | kubectl --kubeconfig ~/kubeconfig apply -f -'
+        //         }
+        //     }
+        // }
+        // stage('Check rollout status') {
+        //     steps {
+        //         withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
+        //             sh 'kubectl --kubeconfig ~/kubeconfig rollout status deployment/$APP_NAME-deployment-$VERSION'
+        //         }
+        //     }
+        // }
+        // stage('Deploy new service') {
+        //     steps {
+        //         withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
+        //             sh 'kubectl --kubeconfig ~/kubeconfig get service ${APP_NAME}-service -o=yaml | sed -e "s/$BLUE_VERSION/$VERSION/g" | kubectl --kubeconfig ~/kubeconfig apply -f -'
+        //         }
+        //     }
+        // }
+        // stage('Delete BLUE version') {
+        //     steps {
+        //         withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
+        //             sh 'kubectl --kubeconfig ~/kubeconfig delete deployment $APP_NAME-deployment-$BLUE_VERSION'
+        //         }
+        //     }
+        // }
     }
 }
