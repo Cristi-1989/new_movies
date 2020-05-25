@@ -25,4 +25,4 @@ vpc:
 nodeGroups:
   - name: ng-1
     instanceType: t3.medium
-    desiredCapacity: 2
+    desiredCapacity: 4

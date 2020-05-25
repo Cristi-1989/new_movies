@@ -109,7 +109,8 @@ public class MovieController {
      * @return redirect to root page with reviews table.
      */
     @GetMapping("/delete/{id}")
-    public String deleteMovieReview(@PathVariable("id") long id, RedirectAttributes attributes) {
+    public String deleteMovieReview(@PathVariable("id") long id, RedirectAttributes attributes)
+    {
         MovieReview movieReview = movieReviewRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid movie Review Id:" + id));
         movieReviewRepository.delete(movieReview);
         attributes.addAttribute("reviews", movieReviewRepository.findAll());
