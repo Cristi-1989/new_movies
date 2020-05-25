@@ -43,7 +43,7 @@ pipeline {
         stage('Configure kubeconfig') {
             steps {
                 withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
-                    sh "aws eks update-kubeconfig --name ${EKS_CLUSTER} --kubeconfig ~/kubeconfig"
+                    sh 'aws eks update-kubeconfig --name $EKS_CLUSTER --kubeconfig ~/kubeconfig'
                 }
             }
         }
@@ -51,7 +51,7 @@ pipeline {
         stage('Get BLUE version') {
             steps {
                 withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
-                    sh "export BLUE_VERSION=$(kubectl --kubeconfig ~/kubeconfig get service ${APP_NAME}-service -o=jsonpath='{.spec.selector.version}')"
+                    sh'export BLUE_VERSION=$(kubectl --kubeconfig ~/kubeconfig get service $APP_NAME-service -o=jsonpath='{.spec.selector.version}')'
                 }
             }
         }
