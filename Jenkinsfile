@@ -9,7 +9,7 @@ pipeline {
         DOCKER_CREDS = 'cristi_docker'
         AWS_REGION = 'us-west-2'
         AWS_CREDENTIALS = "cristi_aws"
-        EKS_CLUSTER = my-cluster
+        EKS_CLUSTER = "my-cluster"
     }
 
     stages {
