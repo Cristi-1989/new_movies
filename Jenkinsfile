@@ -52,15 +52,18 @@ pipeline {
         stage('Get BLUE version') {
             steps {
                 withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
-                    sh '''
-                        export BLUE_VERSION=$(kubectl --kubeconfig ~/kubeconfig get service $APP_NAME-service -o=jsonpath=\'{.spec.selector.version}\')
-                        echo "Current deployed version is $BLUE_VERSION"
-                        echo $BLUE_VERSION >> temp_file
-                    '''
                     script {
-                        currentEnv = readFile('temp_file').trim()
-                        env.BLUE_VERSION = currentEnv
+                        env.BLUE_VERSION=sh(script:  "/bin/bash -c 'kubectl --kubeconfig ~/kubeconfig get service $APP_NAME-service -o=jsonpath=\'{.spec.selector.version}\''", returnStdout: true)
                     }
+                    // sh '''
+                    //     export BLUE_VERSION=$(kubectl --kubeconfig ~/kubeconfig get service $APP_NAME-service -o=jsonpath=\'{.spec.selector.version}\')
+                    //     echo "Current deployed version is $BLUE_VERSION"
+                    //     echo $BLUE_VERSION >> temp_file
+                    // '''
+                    // script {
+                    //     currentEnv = readFile('temp_file').trim()
+                    //     env.BLUE_VERSION = currentEnv
+                    // }
                 }
             }
         }
@@ -68,9 +71,8 @@ pipeline {
             steps {
                 withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
                     script {
-                        sh(script:  "/bin/bash -c 'kubectl --kubeconfig ~/kubeconfig get deployment $APP_NAME-deployment-$BLUE_VERSION | sed -e \"s/$BLUE_VERSION/$VERSION/g\" | kubectl --kubeconfig ~/kubeconfig apply -f -'", returnStdout: true)
+                        sh(script:  "/bin/bash -c 'kubectl --kubeconfig ~/kubeconfig get deployment $APP_NAME-deployment-$BLUE_VERSION -o=yaml | sed -e \"s/$BLUE_VERSION/$VERSION/g\" | kubectl --kubeconfig ~/kubeconfig apply -f -'", returnStdout: true)
                     }
-                    // bash 'kubectl --kubeconfig ~/kubeconfig get deployment $APP_NAME-deployment-$BLUE_VERSION | sed -e "s/$BLUE_VERSION/$VERSION/g" | kubectl --kubeconfig ~/kubeconfig apply -f -'
                 }
             }
         }
@@ -84,7 +86,10 @@ pipeline {
         stage('Deploy new service') {
             steps {
                 withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
-                    sh 'kubectl --kubeconfig ~/kubeconfig get service ${APP_NAME}-service -o=yaml | sed -e "s/$BLUE_VERSION/$VERSION/g" | kubectl --kubeconfig ~/kubeconfig apply -f -'
+                    script {
+                        (sh(script:  "/bin/bash -c 'kubectl --kubeconfig ~/kubeconfig get service ${APP_NAME}-service -o=yaml | sed -e \"s/$BLUE_VERSION/$VERSION/g\" | kubectl --kubeconfig ~/kubeconfig apply -f -'", returnStdout: true)
+                    }
+                    // sh 'kubectl --kubeconfig ~/kubeconfig get service ${APP_NAME}-service -o=yaml | sed -e "s/$BLUE_VERSION/$VERSION/g" | kubectl --kubeconfig ~/kubeconfig apply -f -'
                 }
             }
         }
