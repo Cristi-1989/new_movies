@@ -54,9 +54,6 @@ pipeline {
                 withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
                     sh '''
                         export BLUE_VERSION=$(kubectl --kubeconfig ~/kubeconfig get service $APP_NAME-service -o=jsonpath=\'{.spec.selector.version}\')
-                        if [ -z ${BLUE_VERSION} ]; then
-                            error("Build vailed because it couldn't fetch existing deployed (blue) value")
-                        fi
                         echo "Current deployed version is $BLUE_VERSION"
                     '''
                 }
