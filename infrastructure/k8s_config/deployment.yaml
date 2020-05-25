@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $APP_NAME-deployment-$VERSION
+  labels:
+    app: $APP_NAME
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: $APP_NAME-$VERSION
+      version: $VERSION
+  template:
+    metadata:
+      labels:
+        app: $APP_NAME-$VERSION
+        version: $VERSION
+    spec:
+      containers:
+      - name: $APP_NAME-container
+        image: $IMAGE
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080

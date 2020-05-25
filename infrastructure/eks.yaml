@@ -1,0 +1,28 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: my-cluster
+  region: us-west-2
+vpc:
+  id: vpc-0a0b0149ae87719ba
+  cidr: "10.0.0.0/16"
+  subnets:
+    private:
+      us-west-2a:
+          id: "subnet-0053f71c5d73ba15d"
+          cidr: "10.0.2.0/24"
+      us-west-2b:
+          id: "subnet-0120c06815d62d051"
+          cidr: "10.0.4.0/24"
+    public:
+      us-west-2a:
+          id: "subnet-01084aeb1e618312a"
+          cidr: "10.0.1.0/24"
+      us-west-2b:
+          id: "subnet-0c0a94ae157ab2636"
+          cidr: "10.0.3.0/24"
+
+nodeGroups:
+  - name: ng-1
+    instanceType: t3.medium
+    desiredCapacity: 2
