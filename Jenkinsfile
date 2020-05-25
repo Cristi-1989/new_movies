@@ -67,7 +67,10 @@ pipeline {
         stage('Deploy Green (current) version') {
             steps {
                 withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
-                    bash 'kubectl --kubeconfig ~/kubeconfig get deployment $APP_NAME-deployment-$BLUE_VERSION | sed -e "s/$BLUE_VERSION/$VERSION/g" | kubectl --kubeconfig ~/kubeconfig apply -f -'
+                    script {
+                        sh(script:  "/bin/bash -c 'kubectl --kubeconfig ~/kubeconfig get deployment $APP_NAME-deployment-$BLUE_VERSION | sed -e \"s/$BLUE_VERSION/$VERSION/g\" | kubectl --kubeconfig ~/kubeconfig apply -f -'", returnStdout: true)
+                    }
+                    // bash 'kubectl --kubeconfig ~/kubeconfig get deployment $APP_NAME-deployment-$BLUE_VERSION | sed -e "s/$BLUE_VERSION/$VERSION/g" | kubectl --kubeconfig ~/kubeconfig apply -f -'
                 }
             }
         }
