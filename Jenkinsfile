@@ -87,7 +87,7 @@ pipeline {
             steps {
                 withAWS(credentials: "${AWS_CREDENTIALS}", region: "${AWS_REGION}") {
                     script {
-                        (sh(script:  "/bin/bash -c 'kubectl --kubeconfig ~/kubeconfig get service ${APP_NAME}-service -o=yaml | sed -e \"s/$BLUE_VERSION/$VERSION/g\" | kubectl --kubeconfig ~/kubeconfig apply -f -'", returnStdout: true)
+                        sh(script:  "/bin/bash -c 'kubectl --kubeconfig ~/kubeconfig get service ${APP_NAME}-service -o=yaml | sed -e \"s/$BLUE_VERSION/$VERSION/g\" | kubectl --kubeconfig ~/kubeconfig apply -f -'", returnStdout: true)
                     }
                     // sh 'kubectl --kubeconfig ~/kubeconfig get service ${APP_NAME}-service -o=yaml | sed -e "s/$BLUE_VERSION/$VERSION/g" | kubectl --kubeconfig ~/kubeconfig apply -f -'
                 }
