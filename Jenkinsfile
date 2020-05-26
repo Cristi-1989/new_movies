@@ -55,15 +55,6 @@ pipeline {
                     script {
                         env.BLUE_VERSION=sh(script:  "/bin/bash -c 'kubectl --kubeconfig ~/kubeconfig get service $APP_NAME-service -o=jsonpath=\'{.spec.selector.version}\''", returnStdout: true)
                     }
-                    // sh '''
-                    //     export BLUE_VERSION=$(kubectl --kubeconfig ~/kubeconfig get service $APP_NAME-service -o=jsonpath=\'{.spec.selector.version}\')
-                    //     echo "Current deployed version is $BLUE_VERSION"
-                    //     echo $BLUE_VERSION >> temp_file
-                    // '''
-                    // script {
-                    //     currentEnv = readFile('temp_file').trim()
-                    //     env.BLUE_VERSION = currentEnv
-                    // }
                 }
             }
         }
@@ -89,7 +80,6 @@ pipeline {
                     script {
                         sh(script:  "/bin/bash -c 'kubectl --kubeconfig ~/kubeconfig get service ${APP_NAME}-service -o=yaml | sed -e \"s/$BLUE_VERSION/$VERSION/g\" | kubectl --kubeconfig ~/kubeconfig apply -f -'", returnStdout: true)
                     }
-                    // sh 'kubectl --kubeconfig ~/kubeconfig get service ${APP_NAME}-service -o=yaml | sed -e "s/$BLUE_VERSION/$VERSION/g" | kubectl --kubeconfig ~/kubeconfig apply -f -'
                 }
             }
         }
